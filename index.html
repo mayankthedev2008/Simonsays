@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Says Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            justify-content: center;
+            transition: background-color 0.5s;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-family: 'Press Start 2P', cursive;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #f1c40f;
+            text-shadow: 3px 3px 5px rgba(255, 255, 255, 0.3);
+        }
+        h2 {
+            font-size: 1.2rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+            margin-bottom: 20px;
+            color: #00cec9;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 15px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+            width: 90%;
+            max-width: 400px;
+        }
+        .btn {
+            width: 100%;
+            padding-top: 100%;
+            position: relative;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.05s, box-shadow 0.1s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 5px white;
+        }
+        .flash {
+            opacity: 0.7;
+            transform: scale(1.08);
+        }
+        .game-over {
+            background-color: red !important;
+            animation: shake 0.5s ease-in-out;
+        }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
+            100% { transform: translateX(0); }
+        }
+        .red { background-color: #ff4757; }
+        .orange { background-color: #e67e22; }
+        .yellow { background-color: #f1c40f; }
+        .lime { background-color: #badc58; }
+        .green { background-color: #2ed573; }
+        .cyan { background-color: #00cec9; }
+        .blue { background-color: #3742fa; }
+        .purple { background-color: #9b59b6; }
+        .pink { background-color: #ff6b81; }
+        .brown { background-color: #8d6e63; }
+        .gray { background-color: #636e72; }
+        .white { background-color: #ffffff; color: black; }
+    </style>
+</head>
+<body>
+    <h1>Simon Says Game</h1>
+    <h2>Tap to Start</h2>
+    <div class="container">
+        <div class="btn red" id="red"></div>
+        <div class="btn orange" id="orange"></div>
+        <div class="btn yellow" id="yellow"></div>
+        <div class="btn lime" id="lime"></div>
+        <div class="btn green" id="green"></div>
+        <div class="btn cyan" id="cyan"></div>
+        <div class="btn blue" id="blue"></div>
+        <div class="btn purple" id="purple"></div>
+        <div class="btn pink" id="pink"></div>
+        <div class="btn brown" id="brown"></div>
+        <div class="btn gray" id="gray"></div>
+        <div class="btn white" id="white"></div>
+    </div>
+    <script>
+        let sequence = [];
+        let userSequence = [];
+        let colors = ["red", "orange", "yellow", "lime", "green", "cyan", "blue", "purple", "pink", "brown", "gray", "white"];
+        let level = 0;
+        let started = false;
+
+        document.addEventListener("click", () => {
+            if (!started) {
+                nextSequence();
+                started = true;
+            }
+        });
+
+        function nextSequence() {
+            userSequence = [];
+            level++;
+            document.querySelector("h2").innerText = `Level ${level}`;
+            let randomColor = colors[Math.floor(Math.random() * colors.length)];
+            sequence.push(randomColor);
+            playSequence();
+        }
+
+        function playSequence() {
+            let i = 0;
+            function showNext() {
+                if (i < sequence.length) {
+                    flashButton(sequence[i]);
+                    setTimeout(showNext, 400);
+                    i++;
+                }
+            }
+            showNext();
+        }
+
+        function flashButton(color) {
+            let button = document.getElementById(color);
+            button.classList.add("flash");
+            setTimeout(() => button.classList.remove("flash"), 200);
+        }
+
+        document.querySelectorAll(".btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                let clickedColor = e.target.id;
+                userSequence.push(clickedColor);
+                flashButton(clickedColor);
+                checkAnswer(userSequence.length - 1);
+            });
+        });
+
+        function checkAnswer(index) {
+            if (userSequence[index] !== sequence[index]) {
+                document.body.classList.add("game-over");
+                document.querySelector("h2").innerText = "Game Over! Tap to Restart";
+                setTimeout(() => document.body.classList.remove("game-over"), 500);
+                resetGame();
+            } else if (userSequence.length === sequence.length) {
+                setTimeout(nextSequence, 800);
+            }
+        }
+
+        function resetGame() {
+            sequence = [];
+            userSequence = [];
+            level = 0;
+            started = false;
+        }
+    </script>
+</body>
+</html>
