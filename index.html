@@ -37,14 +37,14 @@
         }
         .container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             padding: 15px;
             border-radius: 15px;
             background: rgba(255, 255, 255, 0.1);
             box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
             width: 90%;
-            max-width: 400px;
+            max-width: 500px;
         }
         .btn {
             width: 100%;
@@ -78,7 +78,6 @@
         .red { background-color: #ff4757; }
         .orange { background-color: #e67e22; }
         .yellow { background-color: #f1c40f; }
-        .lime { background-color: #badc58; }
         .green { background-color: #2ed573; }
         .cyan { background-color: #00cec9; }
         .blue { background-color: #3742fa; }
@@ -87,6 +86,7 @@
         .brown { background-color: #8d6e63; }
         .gray { background-color: #636e72; }
         .white { background-color: #ffffff; color: black; }
+        .black { background-color: #000000; color: white; }
     </style>
 </head>
 <body>
@@ -96,7 +96,6 @@
         <div class="btn red" id="red"></div>
         <div class="btn orange" id="orange"></div>
         <div class="btn yellow" id="yellow"></div>
-        <div class="btn lime" id="lime"></div>
         <div class="btn green" id="green"></div>
         <div class="btn cyan" id="cyan"></div>
         <div class="btn blue" id="blue"></div>
@@ -105,11 +104,12 @@
         <div class="btn brown" id="brown"></div>
         <div class="btn gray" id="gray"></div>
         <div class="btn white" id="white"></div>
+        <div class="btn black" id="black"></div>
     </div>
     <script>
         let sequence = [];
         let userSequence = [];
-        let colors = ["red", "orange", "yellow", "lime", "green", "cyan", "blue", "purple", "pink", "brown", "gray", "white"];
+        let colors = ["red", "orange", "yellow", "green", "cyan", "blue", "purple", "pink", "brown", "gray", "white", "black"];
         let level = 0;
         let started = false;
 
@@ -143,8 +143,10 @@
 
         function flashButton(color) {
             let button = document.getElementById(color);
-            button.classList.add("flash");
-            setTimeout(() => button.classList.remove("flash"), 200);
+            if (button) {
+                button.classList.add("flash");
+                setTimeout(() => button.classList.remove("flash"), 200);
+            }
         }
 
         document.querySelectorAll(".btn").forEach(btn => {
